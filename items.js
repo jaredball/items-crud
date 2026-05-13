@@ -1,17 +1,19 @@
 
 const prompt = require("prompt-sync")();
 
-var myItems = [];
+const myItems = [];
+
 console.log("\nWelcome to Jared's first Javascript project.");
 
 let running = true;
 
 while (running) {
 
-    // input
+    // Input
     let input = prompt("Enter a command: add / edit / delete / quit: ");
     let formattedInput = input.toLowerCase();
-    console.log("You chose " + formattedInput + "!")
+
+    console.log("You chose " + formattedInput + "!");
 
     switch (formattedInput) {
 
@@ -32,58 +34,83 @@ while (running) {
             break;
 
         default:
-            console.log("Invalid command");
+            console.log("Invalid command.");
             break;
     }
 }
 
-console.log("Goodbye! :)")
+console.log("Goodbye! :)\n");
 
-// adds item to array
+
+// Adds item to array
 function addItem() {
 
-    // intro
+    // Intro
     console.log("Here is the current list of items:");
-    printList()
+    printList();
+
     let itemToAdd = prompt("Add an item: ");
 
-    // action
+    // Action
     myItems.push(itemToAdd);
+
     console.log("Here is the new list of items:");
-    printList()
+    printList();
+}
 
-};
 
-// edits item in array
+// Edits item in array
 function editItem() {
 
-};
-
-// deletes item out of array
-function deleteItem() {
-
-    // intro
+    // Intro
     console.log("Here is the current list of items:");
-    printList()
-    let itemtoDelete = prompt("Delete an item (type the number): ");
+    printList();
 
-    if (itemtoDelete < 1 || itemtoDelete > myItems.length) {
+    let itemNumberToEdit = prompt("Edit an item (enter the number): ");
+
+    // Validation check
+    if (itemNumberToEdit < 1 || itemNumberToEdit > myItems.length) {
         console.log("Invalid number. Please choose a valid item.");
         return;
     }
 
-    // action
-    myItems.splice(itemtoDelete - 1, 1);
+    // Action
+    let newItem = prompt("Enter the replacement item: ");
+
+    myItems[itemNumberToEdit - 1] = newItem;
+
     console.log("Here is the new list of items:");
-    printList()
+    printList();
+}
 
-};
 
-// prints items in array
+// Deletes item from array
+function deleteItem() {
+
+    // Intro
+    console.log("Here is the current list of items:");
+    printList();
+
+    let itemToDelete = prompt("Delete an item (enter the number): ");
+
+    // Validation check
+    if (itemToDelete < 1 || itemToDelete > myItems.length) {
+        console.log("Invalid number. Please choose a valid item.");
+        return;
+    }
+
+    // Action
+    myItems.splice(itemToDelete - 1, 1);
+
+    console.log("Here is the new list of items:");
+    printList();
+}
+
+
+// Prints items in array
 function printList() {
 
     for (let index in myItems) {
         console.log((Number(index) + 1) + ". " + myItems[index]);
     }
-
 }
