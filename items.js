@@ -52,7 +52,10 @@ function addItem() {
     let itemToAdd = prompt("Add an item: ");
 
     // Action
-    myItems.push(itemToAdd);
+    myItems.push({
+        text: itemToAdd,
+        completed: false
+    });
 
     console.log("Here is the new list of items:");
     printList();
@@ -77,7 +80,7 @@ function editItem() {
     // Action
     let newItem = prompt("Enter the replacement item: ");
 
-    myItems[itemNumberToEdit - 1] = newItem;
+    myItems[itemNumberToEdit - 1].text = newItem;
 
     console.log("Here is the new list of items:");
     printList();
@@ -111,6 +114,19 @@ function deleteItem() {
 function printList() {
 
     for (let index in myItems) {
-        console.log((Number(index) + 1) + ". " + myItems[index]);
+
+        let status;
+
+        if (myItems[index].completed) {
+            status = "[x]";
+        } else {
+            status = "[ ]";
+        }
+
+        console.log(
+            (Number(index) + 1) + ". " +
+            status + " " +
+            myItems[index].text
+        );
     }
 }
