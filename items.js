@@ -10,7 +10,7 @@ let running = true;
 while (running) {
 
     // Input
-    let input = prompt("Enter a command: add / edit / delete / quit: ");
+    let input = prompt("Enter a command: add / edit / delete / complete / quit: ");
     let formattedInput = input.toLowerCase();
 
     console.log("You chose " + formattedInput + "!");
@@ -27,6 +27,10 @@ while (running) {
 
         case "delete":
             deleteItem();
+            break;
+
+        case "complete":
+            completeItem();
             break;
 
         case "quit":
@@ -104,6 +108,29 @@ function deleteItem() {
 
     // Action
     myItems.splice(itemToDelete - 1, 1);
+
+    console.log("Here is the new list of items:");
+    printList();
+}
+
+// Completes item in array
+function completeItem() {
+
+    // Intro
+    console.log("Here is the current list of items:");
+    printList();
+
+    let itemToComplete = prompt("Complete an item (enter the number): ");
+
+    // Validation check
+    if (itemToComplete < 1 || itemToComplete > myItems.length) {
+        console.log("Invalid number. Please choose a valid item.");
+        return;
+    }
+
+    // Action
+    myItems[itemToComplete - 1].completed =
+        !myItems[itemToComplete - 1].completed;
 
     console.log("Here is the new list of items:");
     printList();
