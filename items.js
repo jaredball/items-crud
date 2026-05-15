@@ -1,4 +1,3 @@
-
 const prompt = require("prompt-sync")();
 
 const myItems = [];
@@ -9,7 +8,7 @@ let running = true;
 
 while (running) {
 
-    // Input
+    // Get user command
     let input = prompt("Enter a command: add / edit / delete / complete / quit: ");
     let formattedInput = input.toLowerCase();
 
@@ -46,109 +45,136 @@ while (running) {
 console.log("Goodbye! :)\n");
 
 
-// Adds item to array
+// ================= Helper Functions =================
+
+// Check if list is empty
+function checkEmptyList() {
+    if (myItems.length === 0) {
+        console.log("No items yet!");
+        return true;
+    }
+    return false;
+}
+
+// Validate numeric index input
+function isValidIndex(value) {
+    return (
+        !isNaN(value) &&
+        value >= 1 &&
+        value <= myItems.length
+    );
+}
+
+// Prompt user and return valid array index (0-based)
+function getValidIndex(promptText) {
+    let value = prompt(promptText);
+
+    if (!isValidIndex(value)) {
+        console.log("Invalid number. Please choose a valid item.");
+        return null;
+    }
+
+    return Number(value) - 1;
+}
+
+
+// ================= Core Functions =================
+
+// Add new item
 function addItem() {
 
-    // Intro
-    console.log("Here is the current list of items:");
+    console.log("Current items:");
     printList();
 
     let itemToAdd = prompt("Add an item: ");
 
-    // Action
+    if (itemToAdd.trim() === "") {
+        console.log("Item cannot be blank.");
+        return;
+    }
+
     myItems.push({
         text: itemToAdd,
         completed: false
     });
 
-    console.log("Here is the new list of items:");
+    console.log("Updated list:");
     printList();
 }
 
 
-// Edits item in array
+// Edit existing item text
 function editItem() {
 
-    // Intro
-    console.log("Here is the current list of items:");
+    if (checkEmptyList()) return;
+
+    console.log("Current items:");
     printList();
 
-    let itemNumberToEdit = prompt("Edit an item (enter the number): ");
+    let index = getValidIndex("Edit item number: ");
+    if (index === null) return;
 
-    // Validation check
-    if (itemNumberToEdit < 1 || itemNumberToEdit > myItems.length) {
-        console.log("Invalid number. Please choose a valid item.");
+    let newItem = prompt("Enter new text: ");
+
+    if (newItem.trim() === "") {
+        console.log("Item cannot be blank.");
         return;
     }
 
-    // Action
-    let newItem = prompt("Enter the replacement item: ");
+    myItems[index].text = newItem;
 
-    myItems[itemNumberToEdit - 1].text = newItem;
-
-    console.log("Here is the new list of items:");
+    console.log("Updated list:");
     printList();
 }
 
 
-// Deletes item from array
+// Delete item by index
 function deleteItem() {
 
-    // Intro
-    console.log("Here is the current list of items:");
+    if (checkEmptyList()) return;
+
+    console.log("Current items:");
     printList();
 
-    let itemToDelete = prompt("Delete an item (enter the number): ");
+    let index = getValidIndex("Delete item number: ");
+    if (index === null) return;
 
-    // Validation check
-    if (itemToDelete < 1 || itemToDelete > myItems.length) {
-        console.log("Invalid number. Please choose a valid item.");
-        return;
-    }
+    myItems.splice(index, 1);
 
-    // Action
-    myItems.splice(itemToDelete - 1, 1);
-
-    console.log("Here is the new list of items:");
+    console.log("Updated list:");
     printList();
 }
 
-// Completes item in array
+
+// Toggle completion status
 function completeItem() {
 
-    // Intro
-    console.log("Here is the current list of items:");
+    if (checkEmptyList()) return;
+
+    console.log("Current items:");
     printList();
 
-    let itemToComplete = prompt("Complete an item (enter the number): ");
+    let index = getValidIndex("Complete item number: ");
+    if (index === null) return;
 
-    // Validation check
-    if (itemToComplete < 1 || itemToComplete > myItems.length) {
-        console.log("Invalid number. Please choose a valid item.");
-        return;
-    }
+    myItems[index].completed = !myItems[index].completed;
 
-    // Action
-    myItems[itemToComplete - 1].completed =
-        !myItems[itemToComplete - 1].completed;
-
-    console.log("Here is the new list of items:");
+    console.log("Updated list:");
     printList();
 }
 
 
-// Prints items in array
+// Display all items
 function printList() {
+
+    if (myItems.length === 0) {
+        console.log("No items yet!");
+        return;
+    }
 
     for (let index in myItems) {
 
-        let status;
-
-        if (myItems[index].completed) {
-            status = "[x]";
-        } else {
-            status = "[ ]";
-        }
+        let status = myItems[index].completed ? "[x]" : "[ ]";
 
         console.log(
             (Number(index) + 1) + ". " +
